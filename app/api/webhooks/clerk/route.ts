@@ -120,7 +120,7 @@
 // import  clerkClient  from "@clerk/nextjs";
 import { createClerkClient  } from "@clerk/backend";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { headers } from "next/headers";
+// import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
@@ -141,11 +141,18 @@ export async function POST(req: Request) {
   }
 
   // Get the headers
-  const headerPayload =  headers();
-  const svix_id = (await headerPayload).get("svix-id");
-  const svix_timestamp = (await headerPayload).get("svix-timestamp");
-  const svix_signature = (await headerPayload).get("svix-signature");
-  console.log("Headers recibidos:", headerPayload);
+  // const headerPayload =  headers();
+  // const svix_id = (await headerPayload).get("svix-id");
+  // const svix_timestamp = (await headerPayload).get("svix-timestamp");
+  // const svix_signature = (await headerPayload).get("svix-signature");
+  // console.log("Headers recibidos:", headerPayload);
+
+  const svix_id = req.headers.get("svix-id");
+  const svix_timestamp = req.headers.get("svix-timestamp");
+  const svix_signature = req.headers.get("svix-signature");
+
+  console.log("Headers recibidos:", { svix_id, svix_timestamp, svix_signature });
+
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response("Error occured -- no svix headers", {
