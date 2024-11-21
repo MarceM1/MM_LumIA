@@ -9,6 +9,15 @@ import { handleError } from "../utils";
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
+    console.log('createUser em user.actions')
+
+    if (!user.email) {
+      throw new Error("Email is required.");
+    }
+    if (!user.username) {
+      throw new Error("Username is required.");
+    }
+
     await connectToDatabase();
 
     const newUser = await User.create(user);
