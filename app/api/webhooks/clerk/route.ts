@@ -127,10 +127,10 @@ import { Webhook } from "svix";
 import { createUser, deleteUser, updateUser } from "@/lib/actions/user.actions";
 
 export async function POST(req: Request) { 
-  console.log("Inicinado webhoock")
+  // console.log("Inicinado webhoock")
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
-  console.log("WEBHOOK_SECRET: ", WEBHOOK_SECRET)
+  // console.log("WEBHOOK_SECRET: ", WEBHOOK_SECRET)
 
   const clerkClient = createClerkClient({});
 
@@ -151,7 +151,7 @@ export async function POST(req: Request) {
   const svix_timestamp = req.headers.get("svix-timestamp");
   const svix_signature = req.headers.get("svix-signature");
 
-  console.log("Headers recibidos:", { svix_id, svix_timestamp, svix_signature });
+  // console.log("Headers recibidos:", { svix_id, svix_timestamp, svix_signature });
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -163,8 +163,8 @@ export async function POST(req: Request) {
   // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
-  console.log('payload: ', payload)
-  console.log('body: ', body)
+  // console.log('payload: ', payload)
+  // console.log('body: ', body)
 
 
   // Create a new Svix instance with your secret.
@@ -204,7 +204,7 @@ export async function POST(req: Request) {
     };
 
     const newUser = await createUser(user);
-    console.log('newUser: ', newUser)
+    // console.log('newUser: ', newUser)
 
     // Set public metadata
     if (newUser) {
@@ -244,7 +244,7 @@ export async function POST(req: Request) {
   }
 
   console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
+  // console.log("Webhook body:", body);
 
   return new Response("", { status: 200 });
 }
