@@ -24,6 +24,7 @@ import { useState, useTransition } from "react"
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils"
 import { updateCredits } from "@/lib/actions/user.actions"
 import MediaUploader from "./MediaUploader"
+import TransformedImage from "./TransformedImage"
 
 
 export const formSchema = z.object({
@@ -46,7 +47,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 
 	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	const [isTranforming, setIsTranforming] = useState(false)
+	const [isTransforming, setIsTransforming] = useState(false)
 
 	const [transformationConfig, setTransformationConfig] = useState(config)
 
@@ -99,9 +100,9 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		}, 1000)
 	}
 
-	// TODO: Return to do updateCredits
+	// TODO: Update creditFeet
 	const onTransformationHandler = async () => {
-		setIsTranforming(true)
+		setIsTransforming(true)
 
 		setTransformationConfig(
 			deepMergeObjects(newTransformation, transformationConfig)
@@ -110,7 +111,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		setNewTransformation(null)
 
 		startTransition(async () => {
-			// await updateCredits(userId, creditFee)
+			await updateCredits(userId, -1) //creditFee
 		})
 	}
 
@@ -211,15 +212,23 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 							/>
 						)}
 					/>
+					<TransformedImage 
+						image={image}
+						type={type}
+						title={form.getValues().title}
+						isTransforming={isTransforming}
+						setIsTransforming={setIsTransforming}
+						transformationConfig={transformationConfig}
+					/>
 				</div>
 
 				<div className="flex flex-col gap-4">
 					<Button
 						className="submit-button capitalize"
 						type="button"
-						disabled={isTranforming || newTransformation === null}
+						disabled={isTransforming || newTransformation === null}
 						onClick={onTransformationHandler}
-					>{isTranforming ? 'Transforming...' : 'Apply Transformation'}</Button>
+					>{isTransforming ? 'Transforming...' : 'Apply Transformation'}</Button>
 					<Button
 						className="submit-button capitalize"
 						type="submit"
