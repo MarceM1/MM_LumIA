@@ -32,9 +32,12 @@ const MediaUploader = ({
 			publicId: result?.info?.public_id,
 			width: result?.info?.width,
 			height: result?.info?.height,
-			secureUrl: result?.info?.secureUrl,
+			secureURL: result?.info?.secure_url,
 		}))
+		console.log('result: ', result)
 
+		console.log('secureUrl: ', result.info.secure_url)
+		
 		onValueChange(result?.info?.public_id)
 
 		toast({
@@ -75,7 +78,7 @@ const MediaUploader = ({
 									width={getImageSize(type, image, 'width')}
 									height={getImageSize(type, image, 'height')}
 									src={publicId}
-									sizes={'(max-widht: 767px)100vw, 50vw'}
+									sizes={'(max-width: 767px)100vw, 50vw'}
 									placeholder={dataUrl as PlaceholderValue}
 									className="media-uploader_cldImage"
 								/>

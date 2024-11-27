@@ -40,7 +40,7 @@ const TransformedImage = ({
             width={getImageSize(type, image, 'width')}
             height={getImageSize(type, image, 'height')}
             src={image?.publicId}
-            sizes={'(max-widht: 767px)100vw, 50vw'}
+            sizes={'(max-width: 767px)100vw, 50vw'}
             placeholder={dataUrl as PlaceholderValue}
             className="transformed-image"
             onLoad={() => {
