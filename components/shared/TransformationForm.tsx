@@ -56,6 +56,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 
 	const [transformationConfig, setTransformationConfig] = useState(config)
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [isPending, startTransition] = useTransition()
 
 	const router = useRouter()
@@ -66,9 +67,9 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		aspectRatio: data?.aspectRatio,
 		color: data?.color,
 		prompt: data?.prompt,
-		publicId: data?.publicI
+		publicId: data?.publicId
 	} : defaultValues
-
+	// console.log('initialValues: ', initialValues)
 
 	//Initial form values
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -128,17 +129,22 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 			}
 
 			if (action === 'Update') {
+				console.log('inicianto updateImage')
 				try {
 					const updatedImage = await updateImage({
 						image: {
 							...imageData,
-							_id: data.id
+							_id: data._id
 						},
 						userId,
 						path: `/transformations/${data._id}`
 					})
+					console.log('image: ', image)
+
+					console.log('updatedImage: ', updatedImage)
 
 					if (updatedImage) {
+						setImage(updatedImage);
 						router.push(`/transformations/${updatedImage._id}`)
 					}
 				} catch (error) {
@@ -155,7 +161,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		setImage((prevState: any) => ({
 			...prevState,
-			aspectRation: imageSize.aspectRatio,
+			aspectRatio: imageSize.aspectRatio,
 			width: imageSize.width,
 			height: imageSize.height
 		}))
@@ -165,6 +171,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 		return onChangeField(value)
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const onInputChangeHandler = (fieldName: string, value: string, type: string, onChangeField: (value: string) => void) => {
 		debounce(() => {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -175,22 +182,35 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 					[fieldName === 'prompt' ? 'prompt' : 'to']: value
 				}
 			}))
-		}, 1000)
+		}, 1000)()
 	}
 
 	// TODO: Update creditFeet
 	const onTransformationHandler = async () => {
+		// console.log('Iniciando transforming')
 		setIsTransforming(true)
+		// console.log('Iniciando setTransformationConfig')
+
+		// console.log('newTransformation: ', newTransformation)
+		// console.log('transformationConfig: ', transformationConfig)
 
 		setTransformationConfig(
 			deepMergeObjects(newTransformation, transformationConfig)
 		)
 
 		setNewTransformation(null)
+		// console.log('setNewTransformation: ', setNewTransformation)
+		
+		// console.log('inicianto : startTransition', startTransition)
 
 		startTransition(async () => {
+			console.log('dentro de startTransition')
+			console.log('userId: ', userId)
+			console.log('creditFee: ', creditFee)
 			await updateCredits(userId, creditFee) //creditFee
+			console.log('al final de startTransition')
 		})
+		console.log('fuera de startTransition')
 	}
 
 	useEffect(() => {
@@ -219,6 +239,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 						render={({ field }) => (
 							<Select
 								onValueChange={(value) => onSelectFieldHandler(value, field.onChange)}
+								value={field.value}
 							>
 								<SelectTrigger className="select-field">
 									<SelectValue placeholder="Select size" />
@@ -245,7 +266,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 								type === 'remove' ? 'Object to remove' : 'Object to recolor'
 							}
 							className="w-full"
-							render={(({ field }) => (
+							render={({ field }) => (
 								<Input
 									{...field}
 									value={field.value}
@@ -257,7 +278,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 										field.onChange
 									)}
 								/>
-							))}
+							)}
 						/>
 
 						{type === 'recolor' && (

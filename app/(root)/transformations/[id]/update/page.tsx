@@ -1,9 +1,47 @@
-import React from 'react'
+// import { auth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
-const UpdateTransformationsPage = () => {
+import Header from "@/components/shared/Header";
+import TransformationForm from "@/components/shared/TransformationForm";
+import { transformationTypes } from "@/constants";
+import { getUserById } from "@/lib/actions/user.actions";
+import { getImageById } from "@/lib/actions/image.actions";
+import { auth } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
+
+const Page = async ({ params: { id } }: SearchParamProps) => {
+  const { userId } = await auth();
+  // console.log('userId en update: ', userId)
+
+  if (!userId) redirect("/sign-in");
+
+  const user = await getUserById(userId);
+  // console.log('user: ', user)
+  const image = await getImageById(id);
+  // console.log('image en update: ', image)
+
+  const transformation =
+    transformationTypes[image.transformationType as TransformationTypeKey];
+    //  console.log('transformationTypes: ',transformationTypes)
+    // console.log('transformation: ',transformation)
+
+
   return (
-    <div>UpdateTransformationsPage</div>
-  )
-}
+    <>
+      <Header title={transformation.title} subtitle={transformation.subTitle} />
 
-export default UpdateTransformationsPage
+      <section className="mt-10">
+        <TransformationForm
+          action="Update"
+          userId={user._id}
+          type={image.transformationType as TransformationTypeKey}
+          creditBalance={user.creditBalance}
+          config={image.config}
+          data={image}
+        />
+      </section>
+    </>
+  );
+};
+
+export default Page;

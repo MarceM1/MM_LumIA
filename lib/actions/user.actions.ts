@@ -9,7 +9,7 @@ import { handleError } from "../utils";
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
-    console.log('createUser em user.actions')
+    console.log("createUser em user.actions");
 
     if (!user.email) {
       throw new Error("Email is required.");
@@ -53,7 +53,7 @@ export async function updateUser(clerkId: string, user: UpdateUserParams) {
     });
 
     if (!updatedUser) throw new Error("User update failed");
-    
+
     return JSON.parse(JSON.stringify(updatedUser));
   } catch (error) {
     handleError(error);
@@ -84,20 +84,23 @@ export async function deleteUser(clerkId: string) {
 
 // USE CREDITS
 export async function updateCredits(userId: string, creditFee: number) {
+  console.log("Iniciando updateCredits ");
   try {
+    console.log("bloque try en updateCredits ");
+
     await connectToDatabase();
 
     const updatedUserCredits = await User.findOneAndUpdate(
       { _id: userId },
-      { $inc: { creditBalance: creditFee }},
+      { $inc: { creditBalance: creditFee } },
       { new: true }
-    )
+    );
+    console.log("updatedUserCredits: ", updatedUserCredits);
 
-    if(!updatedUserCredits) throw new Error("User credits update failed");
+    if (!updatedUserCredits) throw new Error("User credits update failed");
 
     return JSON.parse(JSON.stringify(updatedUserCredits));
   } catch (error) {
     handleError(error);
   }
 }
-

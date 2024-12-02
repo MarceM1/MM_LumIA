@@ -14,7 +14,7 @@ const populateUser = (query: any) =>
   query.populate({
     path: "author",
     model: User,
-    select: "_id firstName lastName",
+    select: "_id firstName lastName clerkId",
   });
 
 // ADD IMAGE
@@ -44,6 +44,7 @@ export async function addImage({ image, userId, path }: AddImageParams) {
 // UPDATE IMAGE
 export async function updateImage({ image, userId, path }: UpdateImageParams) {
   try {
+    // console.log('Iniciando updateImage: ')
     await connectToDatabase();
 
     const imageToUpdate = await Image.findById(image._id);
@@ -80,7 +81,7 @@ export async function deleteImage(imageId: string) {
 }
 
 // GET IMAGE
-export async function getImage(imageId: string) {
+export async function getImageById(imageId: string) {
   try {
     await connectToDatabase();
 
