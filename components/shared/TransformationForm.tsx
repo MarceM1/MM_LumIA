@@ -183,6 +183,7 @@ const TransformationForm = ({ action, data = null, userId, type, creditBalance, 
 				}
 			}))
 		}, 1000)()
+		return onChangeField(value)
 	}
 
 	// TODO: Update creditFeet
